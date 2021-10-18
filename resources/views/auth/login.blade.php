@@ -11,11 +11,19 @@
 </head>
 <body>
 <div class="d-flex flex-column  align-items-center">
-    <form method="post">
+    <form method="post" action="/login">
         @csrf
-        <input type="email" id="inputEmail" class="form-control" placeholder="Enter email" required="" autofocus="">
-        <input type="password" id="inputPassword" class="form-control" placeholder="Enter password" required="">
+        <input type="email" name="email" id="email" class="form-control" placeholder="Enter email" required="" autofocus="">
+        <input type="password" name="password" id="password" class="form-control" placeholder="Enter password" required="">
+        <tr>
+            <td colspan="2" class="text_center" >
+                <label>
+                    <input type="checkbox" name="remember_me" checked="checked" /> Запомнить меня
+                </label>
+            </td>
+        </tr>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <p><a href="/signup">Еще не зарегистрированы?</a></p>
     </form>
 </div>
 
