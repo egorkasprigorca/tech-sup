@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'name' => 'qwerty',
             'email' => 'letov.egir@gmail.com',
             'password' => Hash::make('egorkasprigorca'),
-            'role' => 'admin'
+            'role' => 'manager'
         ]);
     }
 }
