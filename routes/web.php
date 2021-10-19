@@ -17,9 +17,11 @@ use App\Http\Controllers\LogOutController;
 
 Route::redirect('/', '/board');
 
-Route::get('/board', function (){
-    return view('board/board', ['userName' => \Illuminate\Support\Facades\Auth::user()->name]);
-})->middleware('auth');
+Route::get('/board', [\App\Http\Controllers\Board\BoardController::class, 'viewBoard'])->middleware('auth');
+
+Route::view('/board/create-ticket', 'board/create_ticket');
+Route::post('/board/create-ticket', [\App\Http\Controllers\Board\TicketController::class, 'createTicket']);
+Route::get('/board/{id}/close', [\App\Http\Controllers\Board\TicketController::class, 'closeTicket']);
 
 Route::view('/signup', 'auth/signup');
 Route::post('/signup', [SignUpController::class, 'registration']);
