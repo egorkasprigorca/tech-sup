@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Board;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessDispatchTicketNotification;
+use App\Mail\DispatchTicketNotice;
 use App\Models\Chat\Ticket;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class TicketController extends Controller
 {
@@ -15,7 +20,9 @@ class TicketController extends Controller
             'ticket_text' => 'required'
         ]);
 
-        Ticket::createTicket($fields);
+        $ticket = Ticket::createTicket($fields);
+
+        ProcessDispatchTicketNotification::dispatch($ticket);
 
         return redirect('/board');
     }

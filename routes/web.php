@@ -31,4 +31,7 @@ Route::post('/login', [LoginController::class, 'auth']);
 
 Route::get('/board/logout', [LogOutController::class, 'logout']);
 
+Route::get('/board/{id}/chat', [\App\Http\Controllers\Chat\ChatController::class, 'viewChat']);
+Route::post('/board/{id}/chat/create-message', [\App\Http\Controllers\Chat\MessageController::class, 'createMessage']);
+
 

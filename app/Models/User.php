@@ -48,4 +48,9 @@ class User extends Authenticatable
     protected $attributes = [
         'role' => 'user'
     ];
+
+    public function isManager(): bool
+    {
+        return $this->getAttribute('role') === 'manager';
+    }
 }

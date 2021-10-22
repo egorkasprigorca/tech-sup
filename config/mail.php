@@ -54,6 +54,7 @@ return [
         ],
 
         'postmark' => [
+            'token' => env('POSTMARK_TOKEN'),
             'transport' => 'postmark',
         ],
 
@@ -92,8 +93,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'chief.bolotow2013@gmail.com'),
+        'name' => env('MAIL_FROM_NAME', 'Tech support'),
     ],
 
     /*
