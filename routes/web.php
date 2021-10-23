@@ -17,7 +17,7 @@ use App\Http\Controllers\LogOutController;
 
 Route::redirect('/', '/board');
 
-Route::get('/board', [\App\Http\Controllers\Board\BoardController::class, 'viewBoard'])->middleware('auth');
+Route::get('/board', [\App\Http\Controllers\Board\BoardController::class, 'viewBoard'])->middleware('auth')->name("board");
 
 Route::view('/board/create-ticket', 'board/create_ticket');
 Route::post('/board/create-ticket', [\App\Http\Controllers\Board\TicketController::class, 'createTicket']);

@@ -2,7 +2,9 @@
 
 namespace App\Models\Chat;
 
+use App\Exceptions\IsNotPassedDayException;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -44,13 +46,30 @@ class Ticket extends Model
         }
     }
 
-    public static function createTicket(array $fields)
+    public static function makeTicket(array $fields)
     {
         $ticket = Ticket::create([
             'ticket_subject' => $fields['ticket_subject'],
             'ticket_text' => $fields['ticket_text'],
             'author_id' => Auth::id(),
         ]);
+
         return $ticket;
+    }
+
+    public static function createTicket(array $fields, User $user)
+    {
+        if ($user->ticket_time === null) {
+            $ticket = Ticket::makeTicket($fields);
+            $user->setTicketTime();
+            return $ticket;
+        } else if ($user->isPassedDay()) {
+            $ticket = Ticket::makeTicket($fields);
+            $user->setTicketTime();
+            return $ticket;
+        } else {
+            throw new IsNotPassedDayException('Вы можете отправить заявку через '.
+                24 - $user->ticket_time->diffInHours(Carbon::now()->toDateTimeString()) . ' часов');
+        }
     }
 }

@@ -3,6 +3,9 @@
     <h2>Привет {{ $user->name }}</h2>
 @endsection
 @section('main_content')
+    @if (session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
     <h2><a href="/board/create-ticket">Создать заявку</a></h2>
     @if(!empty($tickets))
         @foreach($tickets as $ticket)

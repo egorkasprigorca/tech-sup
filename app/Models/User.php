@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -23,7 +24,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role'
+        'role',
+        'ticket_time'
     ];
 
     /**
@@ -43,6 +45,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'ticket_time' => 'datetime'
     ];
 
     protected $attributes = [
@@ -52,5 +55,20 @@ class User extends Authenticatable
     public function isManager(): bool
     {
         return $this->getAttribute('role') === 'manager';
+    }
+
+    public function setTicketTime()
+    {
+        $this->ticket_time = Carbon::now()->toDateTimeString();
+        $this->save();
+    }
+
+    public function isPassedDay(): bool
+    {
+        $currentTime = Carbon::now()->toDateTimeString();
+
+        $diff = $this->ticket_time->diffInHours($currentTime);
+
+        return $diff >= 24;
     }
 }

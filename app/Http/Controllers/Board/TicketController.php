@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Board;
 
+use App\Exceptions\IsNotPassedDayException;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessDispatchTicketNotification;
 use App\Mail\DispatchTicketNotice;
@@ -20,9 +21,15 @@ class TicketController extends Controller
             'ticket_text' => 'required'
         ]);
 
-        $ticket = Ticket::createTicket($fields);
+        try {
+            $ticket = Ticket::createTicket($fields, Auth::user());
 
-        ProcessDispatchTicketNotification::dispatch($ticket);
+            if ($ticket !== null) {
+                ProcessDispatchTicketNotification::dispatch($ticket);
+            }
+        } catch (IsNotPassedDayException $exception) {
+            return redirect('board')->withError($exception->getMessage())->withInput();
+        }
 
         return redirect('/board');
     }
