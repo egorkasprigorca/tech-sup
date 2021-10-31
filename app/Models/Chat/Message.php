@@ -13,14 +13,16 @@ class Message extends Model
 
     protected $fillable = [
         'message_text',
-        'ticket_id'
+        'ticket_id',
+        'message_sender'
     ];
 
     public static function createMessage(array $fields, int $ticketId)
     {
         Message::create([
             'message_text' => $fields['message'],
-            'ticket_id' => $ticketId
+            'ticket_id' => $ticketId,
+            'message_sender' => Auth::user()->name
         ]);
 
         Ticket::changeTicketStatus(Auth::user(), $ticketId);

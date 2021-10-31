@@ -3,6 +3,7 @@
 namespace App\Models\Chat;
 
 use App\Exceptions\IsNotPassedDayException;
+use App\Exceptions\TicketHaveManagerException;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,7 +22,9 @@ class Ticket extends Model
     ];
 
     protected $attributes = [
-        'ticket_status' => 'inactive'
+        'ticket_status' => 'inactive',
+        'ticket_watched_status' => 'unwatched',
+        'manager_id' => null
     ];
 
     /**
@@ -35,6 +38,11 @@ class Ticket extends Model
     public function isInactive(): bool
     {
         return $this->getAttribute('ticket_status') === 'inactive';
+    }
+
+    public function isWatched(): bool
+    {
+        return $this->getAttribute('ticket_watch_status') === 'watched';
     }
 
     public static function changeTicketStatus(User $user, int $ticketId)
@@ -70,6 +78,26 @@ class Ticket extends Model
         } else {
             throw new IsNotPassedDayException('Вы можете отправить заявку через '.
                 24 - $user->ticket_time->diffInHours(Carbon::now()->toDateTimeString()) . ' часов');
+        }
+    }
+
+    public static function changeWatchedTicketStatus(Ticket $ticket)
+    {
+        if ($ticket->manager_id !== null && $ticket->ticket_watched_status === 'watched') {
+            throw new TicketHaveManagerException('Эта заявка уже имеет менеджера');
+        } else {
+            $ticket->manager_id = Auth::id();
+            $ticket->ticket_watched_status = 'watched';
+            $ticket->ticket_status = 'active';
+            $ticket->save();
+        }
+    }
+
+    public function closeTicket()
+    {
+        if ($this->ticket_status !== 'closed') {
+            $this->ticket_status = 'closed';
+            $this->save();
         }
     }
 }

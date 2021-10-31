@@ -6,31 +6,125 @@
     @if (session('error'))
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
+    @if($isManager)
+        <div class="dropdown">
+            <button onClick='location.href="/board/viewed"' acclass="btn btn-secondary " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Просмотренные
+            </button>
+            <button onClick='location.href="/board/un-viewed"' class="btn btn-secondary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Непросмотренные
+            </button>
+            <button onClick='location.href="/board/unclosed"' acclass="btn btn-secondary " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Незакрытые
+            </button>
+            <button onClick='location.href="/board/closed"' class="btn btn-secondary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Закрытые
+            </button>
+            <button onClick='location.href="/board/answered"' acclass="btn btn-secondary " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Есть ответ
+            </button>
+            <button onClick='location.href="/board/non-answered"' class="btn btn-secondary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Нет ответа
+            </button>
+        </div>
+    @endif
+    @if($boardStatus === 'default')
     <h2><a href="/board/create-ticket">Создать заявку</a></h2>
-    @if(!empty($tickets))
-        @foreach($tickets as $ticket)
-            <div id="accordion">
-                <div class="card">
-                    <div class="card-header" id="headingOne">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                <a href="board/<?= $ticket->id ?>/chat">
-                                    {{$ticket->ticket_subject}}
-                                </a>
-                            </button>
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                <a href="/board/<?= $ticket->id ?>/close">Закрыть заявку</a>
-                            </button>
-                        </h5>
-                    </div>
+    @endif
+    @if($boardStatus === 'default')
+        <h2>{{ $boardName }}</h2>
+        @if(!empty($tickets))
+            @foreach($tickets as $ticket)
+                <div id="accordion">
+                    <div class="card">
+                        @if($ticket->ticket_status === 'closed')
+                            <div class="card-header alert alert-danger" id="headingOne">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <a href="board/<?= $ticket->id ?>/chat">
+                                            {{$ticket->ticket_subject}}
+                                        </a>
+                                    </button>
+                                    @if($isManager)
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            <a href="/board/<?= $ticket->id ?>/take-ticket">Ответить на заявку</a>
+                                        </button>
+                                    @endif
+                                    @if(!$isManager)
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            <a href="/board/<?= $ticket->id ?>/close">Закрыть заявку</a>
+                                        </button>
+                                    @endif
+                                </h5>
+                            </div>
+                        @endif
 
-                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                        <div class="card-body">
-                            {{$ticket->ticket_text}}
+                            @if($ticket->ticket_status !== 'closed')
+                                <div class="card-header" id="headingOne">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            <a href="board/<?= $ticket->id ?>/chat">
+                                                {{$ticket->ticket_subject}}
+                                            </a>
+                                        </button>
+                                        @if($isManager)
+                                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                <a href="/board/<?= $ticket->id ?>/take-ticket">Ответить на заявку</a>
+                                            </button>
+                                        @endif
+                                        @if(!$isManager)
+                                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                <a href="/board/<?= $ticket->id ?>/close">Закрыть заявку</a>
+                                            </button>
+                                        @endif
+                                    </h5>
+                                </div>
+                            @endif
+
+                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{$ticket->ticket_text}}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        @endforeach
+            @endforeach
+        @endif
+    @endif
+    @if($boardStatus === 'noDefault')
+        @if(!empty($tickets))
+            <h2>{{ $boardName }}</h2>
+            @foreach($tickets as $ticket)
+                <div id="accordion">
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <a href="http://tech-sup.loc/board/<?= $ticket->id ?>/chat">
+                                        {{$ticket->ticket_subject}}
+                                    </a>
+                                </button>
+                                @if($isManager)
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <a href="/board/<?= $ticket->id ?>/take-ticket">Ответить на заявку</a>
+                                    </button>
+                                @endif
+                                @if(!$isManager)
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <a href="/board/<?= $ticket->id ?>/close">Закрыть заявку</a>
+                                    </button>
+                                @endif
+                            </h5>
+                        </div>
+
+                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                {{$ticket->ticket_text}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        @endif
     @endif
 @endsection

@@ -19,6 +19,8 @@ class CreateTicketsTable extends Migration
             $table->text('ticket_text');
             $table->foreignId('author_id');
             $table->string('ticket_status');
+            $table->string('ticket_watched_status');
+            $table->foreignId('manager_id')->nullable();
             $table->timestamps();
         });
     }

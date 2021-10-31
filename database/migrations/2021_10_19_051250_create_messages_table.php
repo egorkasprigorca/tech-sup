@@ -17,6 +17,7 @@ class CreateMessagesTable extends Migration
             $table->id();
             $table->text('message_text');
             $table->foreignId('ticket_id');
+            $table->string('message_sender');
             $table->timestamps();
         });
     }

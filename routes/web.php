@@ -17,11 +17,13 @@ use App\Http\Controllers\LogOutController;
 
 Route::redirect('/', '/board');
 
-Route::get('/board', [\App\Http\Controllers\Board\BoardController::class, 'viewBoard'])->middleware('auth')->name("board");
+Route::get('/board', [\App\Http\Controllers\Board\BoardController::class, 'viewBoard'])->middleware('auth')->
+name("board");
 
 Route::view('/board/create-ticket', 'board/create_ticket');
 Route::post('/board/create-ticket', [\App\Http\Controllers\Board\TicketController::class, 'createTicket']);
 Route::get('/board/{id}/close', [\App\Http\Controllers\Board\TicketController::class, 'closeTicket']);
+Route::get('/board/{id}/take-ticket', [\App\Http\Controllers\Board\TicketController::class, 'takeTicket']);
 
 Route::view('/signup', 'auth/signup');
 Route::post('/signup', [SignUpController::class, 'registration']);
@@ -31,7 +33,14 @@ Route::post('/login', [LoginController::class, 'auth']);
 
 Route::get('/board/logout', [LogOutController::class, 'logout']);
 
-Route::get('/board/{id}/chat', [\App\Http\Controllers\Chat\ChatController::class, 'viewChat']);
+Route::get('/board/{id}/chat', [\App\Http\Controllers\Chat\ChatController::class, 'viewChat'])->name('chat');
 Route::post('/board/{id}/chat/create-message', [\App\Http\Controllers\Chat\MessageController::class, 'createMessage']);
+
+Route::get('/board/viewed', [\App\Http\Controllers\Board\TicketsFilterController::class, 'viewed']);
+Route::get('/board/un-viewed', [\App\Http\Controllers\Board\TicketsFilterController::class, 'unViewed']);
+Route::get('/board/closed', [\App\Http\Controllers\Board\TicketsFilterController::class, 'closed']);
+Route::get('/board/unclosed', [\App\Http\Controllers\Board\TicketsFilterController::class, 'unClosed']);
+Route::get('/board/answered', [\App\Http\Controllers\Board\TicketsFilterController::class, 'answered']);
+Route::get('/board/non-answered', [\App\Http\Controllers\Board\TicketsFilterController::class, 'nonAnswered']);
 
 
