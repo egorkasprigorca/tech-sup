@@ -15,7 +15,8 @@ class ChatController extends Controller
         return view('chat/chat',[
             'messages' => Ticket::find($ticketId)->messages,
             'ticket' => Ticket::find($ticketId),
-            'user' => Auth::user()
+            'user' => Auth::user(),
+            'isManager' => Auth::user()->role === 'manager'
         ]);
     }
 }

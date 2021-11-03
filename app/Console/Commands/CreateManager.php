@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Hash;
 
 class CreateManager extends Command
 {
@@ -11,7 +13,8 @@ class CreateManager extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'make:manager';
+
 
     /**
      * The console command description.
@@ -37,6 +40,15 @@ class CreateManager extends Command
      */
     public function handle()
     {
-        return Command::SUCCESS;
+        $email = $this->ask('Введите email менеджера');
+        $name = $this->ask('Введите имя менеджера');
+        $password = $this->ask('Введите пароль менеджера');
+
+        User::create([
+            'email' => $email,
+            'name' => $name,
+            'password' => Hash::make($password),
+            'role' => 'manager'
+        ]);
     }
 }

@@ -43,4 +43,7 @@ Route::get('/board/unclosed', [\App\Http\Controllers\Board\TicketsFilterControll
 Route::get('/board/answered', [\App\Http\Controllers\Board\TicketsFilterController::class, 'answered']);
 Route::get('/board/non-answered', [\App\Http\Controllers\Board\TicketsFilterController::class, 'nonAnswered']);
 
+Route::get('/verify-login/{token}/{id}', [LoginController::class, 'verifyLogin'])->
+name('verify-login');
+
 

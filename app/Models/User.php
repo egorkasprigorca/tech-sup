@@ -10,6 +10,9 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MagicLoginLink;
 
 class User extends Authenticatable
 {
@@ -70,5 +73,21 @@ class User extends Authenticatable
         $diff = $this->ticket_time->diffInHours($currentTime);
 
         return $diff >= 24;
+    }
+
+    public function loginTokens()
+    {
+        return $this->hasMany(LoginToken::class);
+    }
+
+    public function sendLoginLink(int $ticketId)
+    {
+        $plaintext = Str::random(32);
+        $token = LoginToken::create([
+            'token' => hash('sha256', $plaintext),
+            'expires_at' => now()->addMinutes(15),
+            'user_id' => $this->id
+        ]);
+        Mail::to($this->email)->queue(new MagicLoginLink($plaintext, $token->expires_at, $ticketId));
     }
 }

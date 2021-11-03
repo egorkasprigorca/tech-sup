@@ -41,9 +41,16 @@
                                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                     {{$ticket->ticket_subject}}
                                 </button>
-                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    <a href="/board/<?= $ticket->id ?>/close">Закрыть заявку</a>
-                                </button>
+                                @if($isManager)
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <a href="/board/<?= $ticket->id ?>/take-ticket">Ответить на заявку</a>
+                                    </button>
+                                @endif
+                                @if(!$isManager)
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <a href="/board/<?= $ticket->id ?>/close">Закрыть заявку</a>
+                                    </button>
+                                @endif
                             </h5>
                         </div>
 

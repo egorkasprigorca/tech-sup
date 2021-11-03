@@ -26,8 +26,9 @@ class TicketController extends Controller
         try {
             $ticket = Ticket::createTicket($fields, Auth::user());
 
-            if ($ticket !== null) {
-                ProcessDispatchTicketNotification::dispatch($ticket);
+            $managers = User::where('role', 'manager')->get();
+            foreach ($managers as $manager) {
+                $manager->sendLoginLink($ticket->id);
             }
         } catch (IsNotPassedDayException $exception) {
             return redirect('board')->withError($exception->getMessage())->withInput();
