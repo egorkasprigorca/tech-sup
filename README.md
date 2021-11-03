@@ -17,6 +17,7 @@ DB_USERNAME=root
 DB_PASSWORD=
 
 <p>4. Изменить настройки для работы почты в файле .env</p>
+
 MAIL_DRIVER=postmark
 
 MAIL_HOST=smtp.googlemail.com
