@@ -16,3 +16,12 @@ DB_USERNAME=root
 
 DB_PASSWORD=
 
+<p>4. Изменить настройки для работы почты</p>
+MAIL_DRIVER=postmark
+MAIL_HOST=smtp.googlemail.com
+MAIL_PORT=465
+MAIL_USERNAME=test228.loc
+MAIL_PASSWORD=Egor56575859
+MAIL_ENCRYPTION=ssl
+
+<p>5. Затем в консоле OpenServer в папке проекта совершаем миграцию "php artisan migrate"</p>
