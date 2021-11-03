@@ -33,6 +33,4 @@ MAIL_ENCRYPTION=ssl
 <p>5. Затем в консоле OpenServer в папке проекта совершаем миграцию "php artisan migrate"</p>
 <p>6. Как СУБД можете использовать PhpMyAdmin открыть его по такой ссылке "http://localhost/openserver/phpmyadmin/"</p>
 <p>7. Заходим в меню Open server и в пункте мои проекты выбираем "tech-sup.loc"</p>
-<br>
-Консольные команды 
-php artisan make:manager - создает менеджера.
+
