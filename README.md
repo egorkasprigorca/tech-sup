@@ -18,15 +18,10 @@ DB_PASSWORD=
 
 <p>4. Изменить настройки для работы почты в файле .env</p>
 MAIL_DRIVER=postmark
-
 MAIL_HOST=smtp.googlemail.com
-
 MAIL_PORT=465
-
 MAIL_USERNAME=example@gmail.com
-
 MAIL_PASSWORD=password
-
 MAIL_ENCRYPTION=ssl
 
 <p>5. Затем в консоле OpenServer в папке проекта совершаем миграцию "php artisan migrate"</p>
