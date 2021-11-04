@@ -1,6 +1,6 @@
 @component('mail::message')
-    Hello, to finish logging in please click the link below
+    Появилась новая заявка
     @component('mail::button', ['url' => $url])
-        Click to login
+        Нажмите, чтобы перейти к ней
     @endcomponent
 @endcomponent
