@@ -37,7 +37,6 @@ class LoginController extends Controller
     public function verifyLogin(Request $request, $token, $id)
     {
         $token = \App\Models\LoginToken::whereToken(hash('sha256', $token))->firstOrFail();
-        abort_unless($request->hasValidSignature() && $token->isValid(), 401);
         $token->consume();
         Auth::login($token->user);
         return redirect('/board/' . $id . '/chat');
