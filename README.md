@@ -10,4 +10,10 @@
 <br>
 
 <h2>Наполнение тестовыми данными</h2>
-<p>
+<p> Для создания user и manager в количестве 5 и 2, использовать команду "php artisan db:seed  --class=UserSeeder"
+<p>Данные: user {name: user$i, email: user$i@gmail.com, password:2281337}</p>
+<p>Данные: manager {name: manager$i, email: manager$i@gmail.com, password:2281337}</p>
+<br>
+<br>
+<h2>Собственные artisan команды</h2>
+<p>php artisan make:manager</p>
