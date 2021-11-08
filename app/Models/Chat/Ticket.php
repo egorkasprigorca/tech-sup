@@ -35,6 +35,11 @@ class Ticket extends Model
         return $this->hasMany(Message::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
     public function isInactive(): bool
     {
         return $this->getAttribute('ticket_status') === 'inactive';
@@ -83,7 +88,7 @@ class Ticket extends Model
 
     public static function changeWatchedTicketStatus(Ticket $ticket)
     {
-        if ($ticket->manager_id !== null && $ticket->ticket_watched_status === 'watched') {
+        if ($ticket->ticket_watched_status === 'watched') {
             throw new TicketHaveManagerException('Эта заявка уже имеет менеджера');
         } else {
             $ticket->manager_id = Auth::id();

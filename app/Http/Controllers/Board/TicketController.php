@@ -7,6 +7,7 @@ use App\Exceptions\TicketHaveManagerException;
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessCloseTicketNotification;
 use App\Jobs\ProcessDispatchTicketNotification;
+use App\Mail\CloseTicketNotice;
 use App\Mail\DispatchTicketNotice;
 use App\Models\Chat\Ticket;
 use App\Models\User;
@@ -41,7 +42,10 @@ class TicketController extends Controller
     {
         $ticket = Ticket::find($id);
         if ($ticket->manager_id !== null) {
-            ProcessCloseTicketNotification::dispatch($ticket);
+            $manager = User::where('id', $ticket->manager_id)->get();
+            foreach ($manager as $manage) {
+                Mail::to($manage->email)->queue(new CloseTicketNotice($ticket, Auth::user()));
+            }
         }
 
         $ticket->closeTicket();
@@ -56,6 +60,6 @@ class TicketController extends Controller
         } catch (TicketHaveManagerException $exception) {
             return redirect('board')->withError($exception->getMessage())->withInput();
         }
-        return redirect('/board');
+        return redirect('/board/' . $id . '/chat');
     }
 }

@@ -13,46 +13,68 @@
     <div class="row">
         <div class="col-md-5">
             <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <span class="glyphicon glyphicon-comment"></span> Chat
-                    <div class="btn-group pull-right">
-                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                            <span class="glyphicon glyphicon-chevron-down"></span>
-                        </button>
-                        <ul class="dropdown-menu slidedown">
-                            <li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-refresh">
-                            </span>Refresh</a></li>
-                            <li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-ok-sign">
-                            </span>Available</a></li>
-                            <li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-remove">
-                            </span>Busy</a></li>
-                            <li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-time"></span>
-                                    Away</a></li>
-                            <li class="divider"></li>
-                            <li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-off"></span>
-                                    Sign Out</a></li>
-                        </ul>
-                    </div>
+                @if (session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
+                    <br>
+                <div class="header col-md-6">
+                    <a href="{{ url('/') }}/board">К списку заявок</a>
                 </div>
+                    <hr>
                 <div id="accordion">
                     <div class="card">
-                        <div class="card-header" id="headingOne">
-                            <h5 class="mb-0">
-                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    {{$ticket->ticket_subject}}
-                                </button>
-                                @if($isManager)
+                        @if($ticket->ticket_status === 'closed')
+                            <div class="card-header alert alert-danger" id="headingOne">
+                                <h5 class="mb-0">
                                     <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        <a href="/board/<?= $ticket->id ?>/take-ticket">Ответить на заявку</a>
+                                        <a href="{{ url('/') }}/board/<?= $ticket->id ?>/chat">
+                                            {{$ticket->ticket_subject}}
+                                        </a>
                                     </button>
-                                @endif
-                                @if(!$isManager)
+                                    @if($isManager)
+                                        @if(($ticket->ticket_status !== 'closed') && ($ticket->ticket_watched_status !== 'unwatch'))
+                                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                <a href="{{ url('/') }}/board/<?= $ticket->id ?>/take-ticket">Ответить на заявку</a>
+                                            </button>
+                                        @endif
+                                    @endif
+                                    @if(!$isManager)
+                                        @if($ticket->ticket_status !== 'closed')
+                                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                <a href="{{ url('/') }}/board/<?= $ticket->id ?>/close">Закрыть заявку</a>
+                                            </button>
+                                        @endif
+                                    @endif
+
+                                </h5>
+                            </div>
+                        @endif
+
+                        @if($ticket->ticket_status !== 'closed')
+                            <div class="card-header" id="headingOne">
+                                <h5 class="mb-0">
                                     <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        <a href="/board/<?= $ticket->id ?>/close">Закрыть заявку</a>
+                                        <a href="{{ url('/') }}/board/<?= $ticket->id ?>/chat">
+                                            {{$ticket->ticket_subject}}
+                                        </a>
                                     </button>
-                                @endif
-                            </h5>
-                        </div>
+                                    @if($isManager)
+                                        @if($ticket->ticket_status !== 'closed')
+                                            @if($ticket->ticket_watched_status === 'unwatched')
+                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                    <a href="{{ url('/') }}/board/<?= $ticket->id ?>/take-ticket">Ответить на заявку</a>
+                                                </button>
+                                            @endif
+                                        @endif
+                                    @endif
+                                    @if(!$isManager)
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            <a href="{{ url('/') }}/board/<?= $ticket->id ?>/close">Закрыть заявку</a>
+                                        </button>
+                                    @endif
+                                </h5>
+                            </div>
+                        @endif
 
                         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                             <div class="card-body">
@@ -68,8 +90,7 @@
                                 <li class="left clearfix">
                                     <div class="chat-body clearfix">
                                         <div class="header">
-                                            <strong class="primary-font">{{ $message->message_sender }}</strong> <small class="pull-right text-muted">
-                                                <span class="glyphicon glyphicon-time"></span>12 mins ago</small>
+                                            <strong class="primary-font">{{ $message->message_sender }}</strong>
                                         </div>
                                         <p>
                                             {{ $message->message_text }}
@@ -82,7 +103,7 @@
                 </div>
                 <div class="panel-footer">
                     <div class="input-group">
-                        <form method="post" action="/board/<?= $ticket->id ?>/chat/create-message">
+                        <form method="post" action="{{ url('/') }}/board/<?= $ticket->id ?>/chat/create-message">
                             @csrf
                         <input id="message" name="message" type="text" class="form-control input-sm" placeholder="Type your message here..." />
                         <span class="input-group-btn">
