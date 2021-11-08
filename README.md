@@ -1,36 +1,19 @@
-<p>Развертка проекта на Open Server</p>
+<h2>Развертка проекта</h2>
 
-<p>1. Скачать zip архив с кодом проекта и извлечь в папку OpenServer/domains</p>
-<p>2. Затем открыть консоль в OpenServer перейти в папку проекта и ввести команду "composer update"</p>
-<p>3. Изменить настройки подключения к базе данных в файле .env</p>
+<p>1. Склонировать проект git clone <url></p>
+<p>2. Ввести команду "composer update"</p>
+<p>3. Изменить настройки в файле .env.example на собственные, затем переименовать файл в .env</p>
+<p>4. Ввести команды "php artisan key:generate"</p>
+<p>"php artisan migrate"</p>
+<p>5. Запустить локальный сервер, вы можете использовать встроенный от Laravel, введя команду "php artisan serve"</p>
+<br>
+<br>
 
-DB_CONNECTION=mysql
-
-DB_HOST=127.0.0.1
-
-DB_PORT=3306
-
-DB_DATABASE=tech-sup
-
-DB_USERNAME=root
-
-DB_PASSWORD=
-
-<p>4. Изменить настройки для работы почты в файле .env</p>
-
-MAIL_DRIVER=postmark
-
-MAIL_HOST=smtp.googlemail.com
-
-MAIL_PORT=465
-
-MAIL_USERNAME=example@gmail.com
-
-MAIL_PASSWORD=password
-
-MAIL_ENCRYPTION=ssl
-
-<p>5. Затем в консоле OpenServer в папке проекта совершаем миграцию "php artisan migrate"</p>
-<p>6. Как СУБД можете использовать PhpMyAdmin открыть его по такой ссылке "http://localhost/openserver/phpmyadmin/"</p>
-<p>7. Заходим в меню Open server и в пункте мои проекты выбираем "tech-sup.loc"</p>
-
+<h2>Наполнение тестовыми данными</h2>
+<p> Для создания user и manager в количестве 5 и 2, использовать команду "php artisan db:seed  --class=UserSeeder"
+<p>Данные: user {name: user$i, email: user$i@gmail.com, password:2281337}</p>
+<p>Данные: manager {name: manager$i, email: manager$i@gmail.com, password:2281337}</p>
+<br>
+<br>
+<h2>Собственные artisan команды</h2>
+<p>php artisan make:manager</p>
