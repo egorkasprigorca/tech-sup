@@ -5,10 +5,7 @@ namespace App\Http\Controllers\Board;
 use App\Exceptions\IsNotPassedDayException;
 use App\Exceptions\TicketHaveManagerException;
 use App\Http\Controllers\Controller;
-use App\Jobs\ProcessCloseTicketNotification;
-use App\Jobs\ProcessDispatchTicketNotification;
 use App\Mail\CloseTicketNotice;
-use App\Mail\DispatchTicketNotice;
 use App\Models\Chat\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -41,15 +38,23 @@ class TicketController extends Controller
     public function closeTicket(int $id)
     {
         $ticket = Ticket::find($id);
-        if ($ticket->manager_id !== null) {
-            $manager = User::where('id', $ticket->manager_id)->get();
-            foreach ($manager as $manage) {
-                Mail::to($manage->email)->queue(new CloseTicketNotice($ticket, Auth::user()));
+        $authUser = Auth::user();
+
+        if ($authUser->role === 'user') {
+            if ($ticket->manager_id !== null) {
+                $managers = User::where('id', $ticket->manager_id)->get();
+                foreach ($managers as $manager) {
+                    Mail::to($manager->email)->queue(new CloseTicketNotice($ticket, $authUser));
+                }
+            }
+        } else {
+            if ($ticket->manager_id !== null) {
+                $user = User::where('id', $ticket->author_id)->first();
+                Mail::to($user->email)->queue(new CloseTicketNotice($ticket, $authUser));
             }
         }
 
         $ticket->closeTicket();
-
         return redirect('/board');
     }
 

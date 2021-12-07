@@ -32,6 +32,10 @@ class SendMessageNotice extends Mailable
      */
     public function build()
     {
-        return $this->view('emails/send_message_notice');
+        return $this->subject(
+            config('app.name') . ' send answer'
+        )->markdown('emails/send_message_notice' , [
+            'url' => url('/') . '/board/' . $this->ticket->id . '/chat'
+        ]);
     }
 }

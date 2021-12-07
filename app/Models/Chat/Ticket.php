@@ -27,6 +27,10 @@ class Ticket extends Model
         'manager_id' => null
     ];
 
+    protected $dates = [
+        'created_at'
+    ];
+
     /**
      * Get messages for ticket.
      */
@@ -48,6 +52,15 @@ class Ticket extends Model
     public function isWatched(): bool
     {
         return $this->getAttribute('ticket_watch_status') === 'watched';
+    }
+
+    public function isPassedDay($ticketForCheck): bool
+    {
+        $currentTime = Carbon::now()->toDateString();
+
+        $ticketTime = Carbon::parse($ticketForCheck->created_at);
+        $diff = $ticketTime->diffInHours($currentTime);
+        return $diff >= 24;
     }
 
     public static function changeTicketStatus(User $user, int $ticketId)
@@ -72,17 +85,22 @@ class Ticket extends Model
 
     public static function createTicket(array $fields, User $user)
     {
-        if ($user->ticket_time === null) {
+        $ticketForCheck = Ticket::where('author_id', $user->id)
+            ->where('ticket_status', '!=', 'closed')
+            ->latest()->first();
+
+        if ($ticketForCheck === null) {
             $ticket = Ticket::makeTicket($fields);
-            $user->setTicketTime();
             return $ticket;
-        } else if ($user->isPassedDay()) {
+        } else if ($ticketForCheck->created_at === null) {
             $ticket = Ticket::makeTicket($fields);
-            $user->setTicketTime();
+            return $ticket;
+        } else if ($ticketForCheck->isPassedDay($ticketForCheck)) {
+            $ticket = Ticket::makeTicket($fields);
             return $ticket;
         } else {
             throw new IsNotPassedDayException('Вы можете отправить заявку через '.
-                24 - $user->ticket_time->diffInHours(Carbon::now()->toDateTimeString()) . ' часов');
+                24 - $ticketForCheck->created_at->diffInHours(Carbon::now()->toDateTimeString()) . ' часов');
         }
     }
 

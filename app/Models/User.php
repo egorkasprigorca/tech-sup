@@ -65,7 +65,6 @@ class User extends Authenticatable
         $this->ticket_time = Carbon::now()->toDateTimeString();
         $this->save();
     }
-
     public function isPassedDay(): bool
     {
         $currentTime = Carbon::now()->toDateTimeString();

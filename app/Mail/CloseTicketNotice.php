@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\URL;
 
 class CloseTicketNotice extends Mailable
 {
@@ -32,6 +33,10 @@ class CloseTicketNotice extends Mailable
      */
     public function build()
     {
-        return $this->view('emails/close_ticket_notice');
+        return $this->subject(
+            config('app.name') . ' close ticket'
+        )->markdown('emails/close_ticket_notice', [
+            'url' => url('/') . '/board/' . $this->ticket->id . '/chat'
+        ]);
     }
 }
